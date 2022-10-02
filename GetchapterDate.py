@@ -12,7 +12,7 @@ headers={
 }
 
 # 该方法用来爬取某章节下所有页面的数据
-def getchapterdata(url):
+def getchapterdata(url,novelname):
     chapterdate = requests.get(url=url, headers=headers).content.decode("gbk")
     chapterdatetree=etree.HTML(chapterdate)
     # 取文章分页最大值maxnum
@@ -35,5 +35,9 @@ def getchapterdata(url):
                 if string2 !="":
                     folmatdata =folmatdata+string2
     print(folmatdata)
+    with open(file="{}".format(novelname), mode="w", encoding="utf-8-sig", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerows(folmatdata)
+        f.close()
 
 

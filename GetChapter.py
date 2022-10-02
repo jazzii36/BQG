@@ -32,7 +32,7 @@ def Getchapter(url,novelname):
         chapterdatas.extend(chapterdata)
     print(chapterdatas)
     # 章节数据格式化存储csv
-    with open(file="{}.csv".format(novelname), mode="w", encoding="utf-8-sig", newline="") as f:
+    with open(file="{}Chapter.csv".format(novelname), mode="w", encoding="utf-8-sig", newline="") as f:
         headerstable=["Url","chaptername"]
         a = len(chapterdatas)
         b = [chapterdatas[i:i + 2] for i in range(0, a, 2)]
