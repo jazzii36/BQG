@@ -13,31 +13,37 @@ headers={
 chapterdatas=[]
 def Getchapter(url,novelname):
     url1 = "https://m.um16.cn"+url[0:-5]+"_1.html"
-    print(url1)
-    chapterres = requests.get(url=url1, headers=headers).content.decode("gbk")
-    print(url1,chapterres)
-    # 获取所有章节最大分页值
-    pattern = "第1/(.*?)页"
-    chaptermax=re.findall(pattern, chapterres)
-    print(novelname,chaptermax)
-    # 爬取所有章节目录数据
-    for n in range(1,int(chaptermax[0])+1):
-        url2 = "https://m.um16.cn"+url[0:-5]+"_"+str(n)+".html"
-        chapterres = requests.get(url=url2, headers=headers).content.decode("gbk")
-        # print(chapterres)
-        # 获取每一个章节目录数据
-        chaptertree = etree.HTML(chapterres)
-        chapterdata = chaptertree.xpath("/html/body/div[@class='cover']/ul//li/a/text()|/html/body/div[@class='cover']/ul[@class='chapter']//li/a/@href")
-        # print(chapterdata)
-        chapterdatas.extend(chapterdata)
-    print(chapterdatas)
-    # 章节数据格式化存储csv
-    with open(file="{}Chapter.csv".format(novelname), mode="w", encoding="utf-8-sig", newline="") as f:
-        headerstable=["Url","chaptername"]
-        a = len(chapterdatas)
-        b = [chapterdatas[i:i + 2] for i in range(0, a, 2)]
-        writer = csv.writer(f)
-        writer.writerow(headerstable)
-        writer.writerows(b)
-        f.close()
+    # print(url1)
+    try:
+        chapterres = requests.get(url=url1, headers=headers).content.decode("gbk")
+        # print(url1,chapterres)
+        # 获取所有章节最大分页值
+        pattern = "第1/(.*?)页"
+        chaptermax=re.findall(pattern, chapterres)
+        # print(novelname,chaptermax)
+        # 爬取所有章节目录数据
+        for n in range(1,int(chaptermax[0])+1):
+            url2 = "https://m.um16.cn"+url[0:-5]+"_"+str(n)+".html"
+            chapterres = requests.get(url=url2, headers=headers).content.decode("gbk")
+            # print(chapterres)
+            # 获取每一个章节目录数据
+            chaptertree = etree.HTML(chapterres)
+            chapterdata = chaptertree.xpath("/html/body/div[@class='cover']/ul//li/a/text()|/html/body/div[@class='cover']/ul[@class='chapter']//li/a/@href")
+            # print(chapterdata)
+            chapterdatas.extend(chapterdata)
+        # print(chapterdatas)
+        # 章节数据格式化存储csv
+        with open(file="chaptertxt/{}Chapter.csv".format(novelname), mode="w", encoding="utf-8-sig", newline="") as f:
+            headerstable=["Url","chaptername"]
+            a = len(chapterdatas)
+            b = [chapterdatas[i:i + 2] for i in range(0, a, 2)]
+            writer = csv.writer(f)
+            writer.writerow(headerstable)
+            writer.writerows(b)
+            f.close()
+            print("获取{}文章目录成功".format(novelname))
+
+    except Exception as e:
+        print(e)
+
 
