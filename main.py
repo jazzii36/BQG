@@ -16,4 +16,5 @@ sql="SELECT bookname,urls FROM xhnovel "
 mycursor.execute(sql)
 results=mycursor.fetchall()
 for re in results:
+  print(re[1],re[0])
   GetChapter.Getchapter(url=re[1],novelname=re[0])
